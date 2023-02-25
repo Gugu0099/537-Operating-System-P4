@@ -89,8 +89,15 @@ sys_uptime(void)
   return xticks;
 }
 
+// set the number of tickets of the calling process.
+// By default, each process should get one ticket
+// calling this routine makes it such that a process can raise the number of tickets it receives,
+// and thus receive a higher proportion of CPU cycles
+// return 0 if seccessful, 
+// -1 otherwise Ex. caller passes in a number less than one
 int
 sys_settickets(int number){
+
   return 0;
 }
 
