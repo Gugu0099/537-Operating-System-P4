@@ -3,6 +3,7 @@
 
 #include "param.h"
 
+
 struct pstat {
   int inuse[NPROC];   // whether this slot of the process table is in use (1 or 0)
   int tickets[NPROC]; // the number of tickets this process has

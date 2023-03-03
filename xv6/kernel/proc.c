@@ -5,6 +5,9 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "pstat.h"
+
+int maxStride = 12;
 
 struct
 {
@@ -45,6 +48,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->ticks = 0;
+  p->tickets = 1;
+  p->strides = maxStride;
+  p->pass = maxStride;
+
   release(&ptable.lock);
 
   // Allocate kernel stack if possible.
@@ -146,6 +154,9 @@ int fork(void)
   np->sz = proc->sz;
   np->parent = proc;
   *np->tf = *proc->tf;
+  np->tickets = proc->tickets;
+  np->strides = proc->strides;
+  np->pass = proc->strides;
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
@@ -263,6 +274,7 @@ int wait(void)
 void scheduler(void)
 {
   struct proc *p;
+  struct proc *minPass;
 
   for (;;)
   {
@@ -271,26 +283,45 @@ void scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+    int minP = 1410065408;
+
     for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
     {
       if (p->state != RUNNABLE)
         continue;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      swtch(&cpu->scheduler, proc->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      proc = 0;
+      if (p->pass < minP)
+      {
+        minP = p->pass;
+        minPass = p;
+      }
     }
-    release(&ptable.lock);
-  }
+
+    if (minPass == NULL)
+    {
+      release(&ptable.lock);
+      continue;
+    }
+
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    proc = minPass;
+    switchuvm(minPass);
+    minPass->state = RUNNING;
+    swtch(&cpu->scheduler, proc->context);
+    switchkvm();
+
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    proc = 0;
+
+    minPass -> ticks++;
+    minP = 0;
+    minPass -> strides = maxStride / (minPass -> tickets);
+    minPass -> pass = minPass -> pass + minPass -> strides;
+  
+  release(&ptable.lock);
+}
 }
 
 // Enter scheduler.  Must hold only ptable.lock
@@ -449,22 +480,25 @@ void procdump(void)
   }
 }
 
-// sets the number of tickets of the calling process
-// each process should get one ticket
-// calling this, a process can raise the number of tickets it recevies
-// thus, recive a higher proportion of CPU cycles
-// return 0 if successful, -1 otherwise
-int settickets(int number)
+int getpinfo(struct pstat *t)
 {
-  if(number < 1){
-    return -1;
+  struct proc *p;
+  acquire(&ptable.lock);
+  int count = 0;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != UNUSED){
+      t -> inuse[count] = 1;
+    } else {
+      t -> inuse[count] = 0;
+    }
+
+    t -> pass[count] = p -> pass;
+    t -> pid[count] = p -> pid;
+    t -> strides[count] = p -> strides;
+    t -> ticks[count] = p -> ticks;
+    t -> tickets[count] = p -> tickets;
+    count++;
   }
-  
-  return 0;
-}
-
-
-int getpinfo(struct pstat *)
-{
+  release(&ptable.lock);
   return 0;
 }

@@ -5,6 +5,7 @@
 #include "mmu.h"
 #include "proc.h"
 #include "sysfunc.h"
+#include "pstat.h"
 
 int
 sys_fork(void)
@@ -96,12 +97,30 @@ sys_uptime(void)
 // return 0 if seccessful, 
 // -1 otherwise Ex. caller passes in a number less than one
 int
-sys_settickets(int number){
+sys_settickets(void){
+  int num;
+  if(argint(0, &num) < 0 || num <= 0){
+    // either call is not successful or ticket num not valid
+    return -1; 
+  }
+  int maxStride = 12;
+  proc -> tickets = num;
+  proc -> strides = maxStride / num; // formula to strides
 
   return 0;
 }
 
 int 
-sys_getpinfo(struct pstat *){
-  return 0;
+sys_getpinfo(void){
+  struct pstat *table;
+  table = NULL;
+  if(argptr(0, (void *)&table, sizeof(table)) < 0){
+    // fetching argument is not successful
+    return -1;
+  }
+  if(table == NULL){
+    return -1;
+  }
+
+  return getpinfo(table);
 }
