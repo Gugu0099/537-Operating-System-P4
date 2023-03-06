@@ -289,12 +289,14 @@ void scheduler(void)
     {
       if (p->state != RUNNABLE)
         continue;
+     // cprintf("pid(%d): ticks: %d, pass:%d\n", p -> pid, p -> ticks, p -> pass);
       if (p->pass < minP)
       {
         minP = p->pass;
         minPass = p;
       }
     }
+   // cprintf("\n");
 
     if (minPass == NULL)
     {

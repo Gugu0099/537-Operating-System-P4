@@ -99,10 +99,14 @@ sys_uptime(void)
 int
 sys_settickets(void){
   int num;
-  if(argint(0, &num) < 0 || num <= 0){
+  if(argint(0, &num) < 0){
     // either call is not successful or ticket num not valid
     return -1; 
   }
+  if(num <= 0){
+    return -1;
+  }
+  
   int maxStride = 12;
   proc -> tickets = num;
   proc -> strides = maxStride / num; // formula to strides

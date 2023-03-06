@@ -39,6 +39,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -49,7 +50,7 @@ forktest
 zombie
 wc
 init
-balloc: first 453 blocks have been allocated
+balloc: first 474 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -104,6 +105,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -114,7 +116,7 @@ forktest
 zombie
 wc
 init
-balloc: first 454 blocks have been allocated
+balloc: first 475 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -158,17 +160,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:9:6: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-    9 |   if(settickets(10) == 0)
-      |      ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 473 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_3 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_3 PASSED (1 of 1)
  (Tests to make sure setting number of tickets doesn't fail for small ticket numbers)
- make failed (error 2)
 
 starting test_4
 
@@ -184,17 +226,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:9:6: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-    9 |   if(settickets(1000000) == 0)
-      |      ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 473 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_4 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_4 PASSED (1 of 1)
  (Tests to make sure setting number of tickets doesn't fail for large ticket numbers)
- make failed (error 2)
 
 starting test_5
 
@@ -210,17 +292,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:9:6: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-    9 |   if(settickets(0) == -1)
-      |      ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 473 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_5 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_5 PASSED (1 of 1)
  (Tests to make sure setting number of tickets fails for 0)
- make failed (error 2)
 
 starting test_6
 
@@ -236,17 +358,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:9:6: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-    9 |   if(settickets(-10) == -1)
-      |      ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 473 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_6 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_6 PASSED (1 of 1)
  (Tests to make sure setting number of tickets fails for negative numbers)
- make failed (error 2)
 
 starting test_7
 
@@ -273,6 +435,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -283,7 +446,7 @@ forktest
 zombie
 wc
 init
-balloc: first 453 blocks have been allocated
+balloc: first 474 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -302,12 +465,14 @@ iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
 Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
 
 
-Booting from Hard Disk..xv6...
+Booting from Hard Disk...
+xv6...
 cpu0: starting
 init: starting sh
 $ tester
 tester
 XV6_SCHEDULER	 SUCCESS
+
 
 test test_7 PASSED (1 of 1)
  (Test to make sure getpinfo fails for pid 0)
@@ -337,6 +502,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -347,7 +513,7 @@ forktest
 zombie
 wc
 init
-balloc: first 453 blocks have been allocated
+balloc: first 474 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -382,7 +548,7 @@ starting test_9
 **********************************************************************
 
 Test test_9
-Test to check that parent and child pids equal
+Test to check that parent and child tickets are set corretly
 
 **********************************************************************
 Running xv6 user progam /home/cs537-1/tests/P4/ctests/test_9.c
@@ -391,17 +557,58 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:11:12: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-   11 |         if(settickets(tickets) == 0)
-      |            ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 475 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_9 FAILED (0 of 1)
- (Test to check that parent and child pids equal)
- make failed (error 2)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+parent: 10, child: 10
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_9 PASSED (1 of 1)
+ (Test to check that parent and child tickets are set corretly)
 
 starting test_10
 
@@ -428,6 +635,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -438,7 +646,7 @@ forktest
 zombie
 wc
 init
-balloc: first 455 blocks have been allocated
+balloc: first 476 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -465,8 +673,8 @@ tester
 Spinning...
 
 **** PInfo ****
-pid: 1 tickets: 1 ticks: 32
-pid: 2 tickets: 1 ticks: 6070
+pid: 1 tickets: 1 ticks: 33
+pid: 2 tickets: 1 ticks: 6291
 pid: 3 tickets: 1 ticks: 105
 pid: 4 tickets: 1 ticks: 105
 pid: 5 tickets: 1 ticks: 105
@@ -494,17 +702,71 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:72:12: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-   72 |         if(settickets(lowtickets) != 0)
-      |            ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 478 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_11 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+
+ ****PInfo before**** 
+pid: 1 tickets: 1 ticks: 72
+pid: 2 tickets: 1 ticks: 6679
+pid: 3 tickets: 5 ticks: 39
+pid: 4 tickets: 10000 ticks: 0
+Spinning...
+
+ ****PInfo after**** 
+pid: 1 tickets: 1 ticks: 72
+pid: 2 tickets: 1 ticks: 6679
+pid: 3 tickets: 5 ticks: 39
+pid: 4 tickets: 10000 ticks: 116
+high before: 0 high after: 116, low before: 39 low after: 39
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_11 PASSED (1 of 1)
  (Test to make sure schedular selects right processes)
- make failed (error 2)
 
 starting test_12
 
@@ -520,17 +782,70 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:30:5: error: implicit declaration of function ‘settickets’ [-Werror=implicit-function-declaration]
-   30 |     settickets(3);
-      |     ^~~~~~~~~~
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 476 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_12 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+Printing for child: 1
+pid: 1, tickets: 1, stride: 12, pass: 648, ticks: 53
+pid: 2, tickets: 1, stride: 12, pass: 79008, ticks: 6583
+pid: 3, tickets: 1, stride: 12, pass: 528, ticks: 43
+pid: 4, tickets: 3, stride: 4, pass: 1092, ticks: 270
+pid: 5, tickets: 2, stride: 6, pass: 1092, ticks: 180
+Child process 1 finished
+Child process 2 finished
+Printing for child: 2
+pid: 1, tickets: 1, stride: 12, pass: 648, ticks: 53
+pid: 2, tickets: 1, stride: 12, pass: 79008, ticks: 6583
+pid: 3, tickets: 1, stride: 12, pass: 552, ticks: 45
+pid: 5, tickets: 2, stride: 6, pass: 1614, ticks: 267
+XV6_SCHEDULAR	 SUCCESS
+
+
+test test_12 PASSED (1 of 1)
  (Test to make sure schedular selects right processes during multiple forks)
- make failed (error 2)
 
 starting test_13
 
@@ -546,18 +861,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:11:12: error: implicit declaration of function ‘settickets’; did you mean ‘SYS_settickets’? [-Werror=implicit-function-declaration]
-   11 |         if(settickets(5) == 0)
-      |            ^~~~~~~~~~
-      |            SYS_settickets
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 475 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_13 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_13 PASSED (1 of 1)
  (Test to make sure schedular's internals are properly updating)
- make failed (error 2)
 
 starting test_14
 
@@ -584,6 +938,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -594,7 +949,7 @@ forktest
 zombie
 wc
 init
-balloc: first 453 blocks have been allocated
+balloc: first 474 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -649,6 +1004,7 @@ tester
 ls
 kill
 ln
+test_graph
 grep
 stressfs
 cat
@@ -659,7 +1015,7 @@ forktest
 zombie
 wc
 init
-balloc: first 454 blocks have been allocated
+balloc: first 475 blocks have been allocated
 balloc: write bitmap block at sector 28
 rm user/bin/tester
 make qemu-nox CPUS=1
@@ -703,18 +1059,57 @@ make
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 \
 	-M -MG user/tester.c -MF user/tester.d -MT user/tester.d -MT user/tester.o
 gcc  -I include -nostdinc -Wall -Werror -ggdb -fno-pic -fno-builtin -fno-strict-aliasing -fno-stack-protector -m32 -c -o user/tester.o user/tester.c
-user/tester.c: In function ‘main’:
-user/tester.c:14:17: error: implicit declaration of function ‘settickets’; did you mean ‘SYS_settickets’? [-Werror=implicit-function-declaration]
-   14 |                 settickets(6);
-      |                 ^~~~~~~~~~
-      |                 SYS_settickets
-cc1: all warnings being treated as errors
-make: *** [user/makefile.mk:92: user/tester.o] Error 1
+ld  -m    elf_i386 -nostdlib --omagic --entry=main --section-start=.text=0x0 --output=user/bin/tester user/tester.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+cp user/bin/tester fs/tester
+./tools/mkfs fs.img fs
+used 29 (bit 1 ninode 26) free 29 total 1024
+usertests
+mkdir
+README
+tester
+ls
+kill
+ln
+test_graph
+grep
+stressfs
+cat
+sh
+rm
+echo
+forktest
+zombie
+wc
+init
+balloc: first 475 blocks have been allocated
+balloc: write bitmap block at sector 28
+rm user/bin/tester
+make qemu-nox CPUS=1
+Ctrl+a h for help
+timeout --foreground --preserve-status 900 /p/course/cs537-remzi/ta/tools/qemu -nographic -hdb fs.img xv6.img -smp 1
+WARNING: Image format was not specified for 'fs.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+WARNING: Image format was not specified for 'xv6.img' and probing guessed raw.
+         Automatically detecting the format is dangerous for raw images, write operations on block 0 will be restricted.
+         Specify the 'raw' format explicitly to remove the restrictions.
+c[?7l[2J[0mSeaBIOS (version 1.15.0-1)
 
 
-test test_16 FAILED (0 of 1)
+iPXE (https://ipxe.org) 00:03.0 CA00 PCI2.10 PnP PMM+07F8B4A0+07ECB4A0 CA00
+Press Ctrl-B to configure iPXE (PCI 00:03.0)...                                                                               
+
+
+Booting from Hard Disk..xv6...
+cpu0: starting
+init: starting sh
+$ tester
+tester
+XV6_SCHEDULER	 SUCCESS
+
+
+test test_16 PASSED (1 of 1)
  (Test to make sure processes with different numbers of tickets are scheduled properly)
- make failed (error 2)
 
 **********************************************************************
 Summary:
@@ -727,21 +1122,17 @@ test test_1 PASSED (1 of 1)
 test test_2 PASSED (1 of 1)
  (Tests to make sure default number of tickets is 1)
 
-test test_3 FAILED (0 of 1)
+test test_3 PASSED (1 of 1)
  (Tests to make sure setting number of tickets doesn't fail for small ticket numbers)
- make failed (error 2)
 
-test test_4 FAILED (0 of 1)
+test test_4 PASSED (1 of 1)
  (Tests to make sure setting number of tickets doesn't fail for large ticket numbers)
- make failed (error 2)
 
-test test_5 FAILED (0 of 1)
+test test_5 PASSED (1 of 1)
  (Tests to make sure setting number of tickets fails for 0)
- make failed (error 2)
 
-test test_6 FAILED (0 of 1)
+test test_6 PASSED (1 of 1)
  (Tests to make sure setting number of tickets fails for negative numbers)
- make failed (error 2)
 
 test test_7 PASSED (1 of 1)
  (Test to make sure getpinfo fails for pid 0)
@@ -749,24 +1140,20 @@ test test_7 PASSED (1 of 1)
 test test_8 PASSED (1 of 1)
  (Test to make sure getpinfo fails for large pids)
 
-test test_9 FAILED (0 of 1)
- (Test to check that parent and child pids equal)
- make failed (error 2)
+test test_9 PASSED (1 of 1)
+ (Test to check that parent and child tickets are set corretly)
 
 test test_10 PASSED (1 of 1)
  (Test to make sure the right number of processes are schedualed with fork)
 
-test test_11 FAILED (0 of 1)
+test test_11 PASSED (1 of 1)
  (Test to make sure schedular selects right processes)
- make failed (error 2)
 
-test test_12 FAILED (0 of 1)
+test test_12 PASSED (1 of 1)
  (Test to make sure schedular selects right processes during multiple forks)
- make failed (error 2)
 
-test test_13 FAILED (0 of 1)
+test test_13 PASSED (1 of 1)
  (Test to make sure schedular's internals are properly updating)
- make failed (error 2)
 
 test test_14 PASSED (1 of 1)
  (Check to make sure default tickets are properly set)
@@ -774,10 +1161,9 @@ test test_14 PASSED (1 of 1)
 test test_15 PASSED (1 of 1)
  (Test to make sure strides are properly set)
 
-test test_16 FAILED (0 of 1)
+test test_16 PASSED (1 of 1)
  (Test to make sure processes with different numbers of tickets are scheduled properly)
- make failed (error 2)
 
-Passed 8 of 17 tests.
-Overall 8 of 17
-Points 7 of 16
+Passed 17 of 17 tests.
+Overall 17 of 17
+Points 16 of 16
